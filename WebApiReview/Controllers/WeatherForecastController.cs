@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace WebApiReview.Controllers
 {
@@ -19,15 +20,25 @@ namespace WebApiReview.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> GetWeatherForecast()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            try
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                IEnumerable<WeatherForecast> foreCast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                });
+                return foreCast.ToArray();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"GetWeatherForecast Error_{DateTime.Now}");
+
+                //If error happens, return empty Enumerable
+                return Enumerable.Empty<WeatherForecast>();
+            }
         }
     }
 }
