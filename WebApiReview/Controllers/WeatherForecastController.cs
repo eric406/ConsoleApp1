@@ -24,13 +24,15 @@ namespace WebApiReview.Controllers
         {
             try
             {
-                IEnumerable<WeatherForecast> foreCast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                IEnumerable<int> randomRange = Enumerable.Range(1, 5);
+                IEnumerable<WeatherForecast> weatherForecast = randomRange.Select(index => new WeatherForecast
                 {
                     Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                     TemperatureC = Random.Shared.Next(-20, 55),
                     Summary = Summaries[Random.Shared.Next(Summaries.Length)]
                 });
-                return foreCast.ToArray();
+
+                return weatherForecast.ToArray();
             }
             catch (Exception ex)
             {
