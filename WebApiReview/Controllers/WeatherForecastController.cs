@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using Newtonsoft.Json;
 
 namespace WebApiReview.Controllers
 {
@@ -20,7 +20,7 @@ namespace WebApiReview.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> GetWeatherForecast()
+        public string GetWeatherForecast()
         {
             try
             {
@@ -32,14 +32,15 @@ namespace WebApiReview.Controllers
                     Summary = Summaries[Random.Shared.Next(Summaries.Length)]
                 });
 
-                return weatherForecast.ToArray();
+                string response = JsonConvert.SerializeObject(weatherForecast);
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"GetWeatherForecast Error_{DateTime.Now}");
 
-                //If error happens, return empty Enumerable
-                return Enumerable.Empty<WeatherForecast>();
+                //If error happens, return error message
+                return new string("somethings break, please wait and contact your IT Developer");
             }
         }
     }
